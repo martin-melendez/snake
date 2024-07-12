@@ -25,8 +25,8 @@ public class Main extends Application {
 	private static final double SPEED = 0.1;
 
 	private static Circle food;
-	private Rectangle snakeBody;
 	private Rectangle snakeHead;
+	private Rectangle snakeBody;
 
 	private static final LinkedList<Rectangle> snakeBodyParts = new LinkedList<>();
 	private static final LinkedList<Pair> currentCoordinatesList = new LinkedList<>();
@@ -52,9 +52,11 @@ public class Main extends Application {
 		Timeline timeline = new Timeline();
 		Scene scene = new Scene(root, WINDOW_SIZE, WINDOW_SIZE, Color.BLACK);
 
+		snakeHead = new Rectangle(BODY_WIDTH, BODY_WIDTH);
+		snakeHead.setFill(Color.LIMEGREEN);
+		snakeBodyParts.add(snakeHead);
+
 		snakeBody = new Rectangle(BODY_WIDTH, BODY_WIDTH);
-		snakeBody.setFill(Color.LIMEGREEN);
-		snakeBodyParts.add(snakeBody);
 
 		spawnFood(root);
 
@@ -95,57 +97,57 @@ public class Main extends Application {
 				switch (dir) {
 					case UP -> {
 						isDownEnabled = false;
-						if (snakeBody.getTranslateY() <= 0) {
-							snakeBody.setTranslateY(WINDOW_SIZE - BODY_WIDTH);
+						if (snakeHead.getTranslateY() <= 0) {
+							snakeHead.setTranslateY(WINDOW_SIZE - BODY_WIDTH);
 						} else {
-							snakeBody.setTranslateY(snakeBody.getTranslateY() - BODY_WIDTH);
+							snakeHead.setTranslateY(snakeHead.getTranslateY() - BODY_WIDTH);
 						}
 					}
 					case DOWN -> {
 						isUpEnabled = false;
-						if (snakeBody.getTranslateY() >= WINDOW_SIZE - BODY_WIDTH) {
-							snakeBody.setTranslateY(0);
+						if (snakeHead.getTranslateY() >= WINDOW_SIZE - BODY_WIDTH) {
+							snakeHead.setTranslateY(0);
 						} else {
-							snakeBody.setTranslateY(snakeBody.getTranslateY() + BODY_WIDTH);
+							snakeHead.setTranslateY(snakeHead.getTranslateY() + BODY_WIDTH);
 						}
 					}
 					case RIGHT -> {
 						isLeftEnabled = false;
-						if (snakeBody.getTranslateX() >= WINDOW_SIZE - BODY_WIDTH) {
-							snakeBody.setTranslateX(0);
+						if (snakeHead.getTranslateX() >= WINDOW_SIZE - BODY_WIDTH) {
+							snakeHead.setTranslateX(0);
 						} else {
-							snakeBody.setTranslateX(snakeBody.getTranslateX() + BODY_WIDTH);
+							snakeHead.setTranslateX(snakeHead.getTranslateX() + BODY_WIDTH);
 						}
 					}
 					case LEFT-> {
 						isRightEnabled = false;
-						if (snakeBody.getTranslateX() <= 0) {
-							snakeBody.setTranslateX(WINDOW_SIZE - BODY_WIDTH);
+						if (snakeHead.getTranslateX() <= 0) {
+							snakeHead.setTranslateX(WINDOW_SIZE - BODY_WIDTH);
 						} else {
-							snakeBody.setTranslateX(snakeBody.getTranslateX() - BODY_WIDTH);
+							snakeHead.setTranslateX(snakeHead.getTranslateX() - BODY_WIDTH);
 						}
 					}
                     default ->
                         throw new IllegalStateException("Unexpected value: " + dir);
                 }
 
-				coordinatesHistoryList.addFirst(new Pair(snakeBody.getTranslateX(), snakeBody.getTranslateY()));
+				coordinatesHistoryList.addFirst(new Pair(snakeHead.getTranslateX(), snakeHead.getTranslateY()));
 
-				if (snakeBody.getBoundsInParent().intersects(food.getBoundsInParent())) {
+				if (snakeHead.getBoundsInParent().intersects(food.getBoundsInParent())) {
 					root.getChildren().remove(food);
 
 					spawnFood(root);
 
-					snakeHead = new Rectangle(BODY_WIDTH, BODY_WIDTH);
-					snakeHead.setTranslateX(coordinatesHistoryList.get(snakeBodyParts.size()).x);
-					snakeHead.setTranslateY(coordinatesHistoryList.get(snakeBodyParts.size()).y);
-					snakeHead.setFill(Color.LIGHTGREEN);
-					snakeBodyParts.add(snakeHead);
+					snakeBody = new Rectangle(BODY_WIDTH, BODY_WIDTH);
+					snakeBody.setTranslateX(coordinatesHistoryList.get(snakeBodyParts.size()).x);
+					snakeBody.setTranslateY(coordinatesHistoryList.get(snakeBodyParts.size()).y);
+					snakeBody.setFill(Color.LIGHTGREEN);
+					snakeBodyParts.add(snakeBody);
 
-					root.getChildren().add(snakeHead);
+					root.getChildren().add(snakeBody);
 				}
 
-				if (snakeHead != null) {
+				if (snakeBody != null) {
 					for (int i = 0; i < snakeBodyParts.size(); i++) {
 						snakeBodyParts.get(i).setTranslateX(coordinatesHistoryList.get(i).x);
 						snakeBodyParts.get(i).setTranslateY(coordinatesHistoryList.get(i).y);
@@ -158,8 +160,8 @@ public class Main extends Application {
 				currentCoordinatesList.remove(0);
 
 				for (var item : currentCoordinatesList) {
-					double posX = snakeBody.getTranslateX();
-					double posY = snakeBody.getTranslateY();
+					double posX = snakeHead.getTranslateX();
+					double posY = snakeHead.getTranslateY();
 
 					if (posX == item.x && posY == item.y) {
 						int count = 0;
@@ -174,7 +176,7 @@ public class Main extends Application {
 						}
 
 						snakeBodyParts.clear();
-						snakeBodyParts.add(snakeBody);
+						snakeBodyParts.add(snakeHead);
 					}
 				}
 
@@ -182,7 +184,7 @@ public class Main extends Application {
 			}
 		});
 
-		root.getChildren().addAll(snakeBody);
+		root.getChildren().addAll(snakeHead);
 
 		timeline.getKeyFrames().add(keyFrame);
 		timeline.setCycleCount(Timeline.INDEFINITE);
@@ -225,7 +227,6 @@ public class Main extends Application {
 	}
 
 	public static class Pair {
-		
 		double x;
 		double y;
 
@@ -238,5 +239,4 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
 }
