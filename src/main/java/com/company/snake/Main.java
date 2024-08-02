@@ -202,7 +202,7 @@ public class Main extends Application {
 
 		int setPositionX;
 		int setPositionY;
-		boolean ok = true;
+		boolean c = true;
 
 		do {
 			setPositionX = rndX.nextInt(WINDOW_SIZE);
@@ -216,12 +216,12 @@ public class Main extends Application {
 
 		for (var item : snakeBodyParts) {
 			if (item.getBoundsInParent().intersects(food.getBoundsInParent())) {
-				ok = false;
+				c = false;
 				spawnFood(root);
 			}
 		}
 
-		if (ok) {
+		if (c) {
 			root.getChildren().add(food);
 		}
 	}
