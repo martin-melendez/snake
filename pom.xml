@@ -38,7 +38,7 @@
                         <!-- Usage: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.company.snake.App</mainClass>
+                            <mainClass>com.company.snake.Main</mainClass>
                         </configuration>
                     </execution>
                 </executions>
